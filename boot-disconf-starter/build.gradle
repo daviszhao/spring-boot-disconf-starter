@@ -1,0 +1,94 @@
+plugins {
+    id 'java'
+    id 'maven-publish'
+    id 'signing'
+}
+
+
+dependencies {
+
+    compile 'com.baidu.disconf:disconf-client:2.6.36'
+    compile 'org.springframework.boot:spring-boot-starter-logging'
+    compile 'org.springframework.boot:spring-boot-starter'
+
+    testCompile 'junit:junit'
+}
+
+task sourcesJar(type: Jar) {
+    classifier = 'sources'
+    from sourceSets.main.allJava
+}
+task javadocJar(type: Jar) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+javadoc {
+    description = 'Generates project-level javadoc for use in -javadoc jar'
+
+    options.memberLevel = org.gradle.external.javadoc.JavadocMemberLevel.PROTECTED
+    options.author = true
+    options.version = true
+    options.header = project.name
+    options.addStringOption('Xdoclint:none', '-quiet')
+
+    logging.captureStandardError LogLevel.INFO
+    logging.captureStandardOutput LogLevel.INFO
+    options.encoding = 'UTF-8'
+    options.charSet = 'UTF-8'
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+            artifact sourcesJar
+            artifact javadocJar
+
+            pom {
+                name = 'spring boot starter for disconf'
+                description = 'load application config files from disconf server'
+                url = 'https://github.com/daviszhao/spring-boot-disconf-starter'
+                licenses {
+                    license {
+                        name = 'The Apache License, Version 2.0'
+                        url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+                developers {
+                    developer {
+                        id = 'daviszhao'
+                        name = 'Davis Zhao'
+                        email = 'daviszhao[AT]live.cn'
+                    }
+                }
+                scm {
+                    connection = 'scm:git:https://github.com/daviszhao/spring-boot-disconf-starter.git'
+                    developerConnection = 'scm:git:https://github.com/daviszhao/spring-boot-disconf-starter.git'
+                    url = 'https://github.com/daviszhao/spring-boot-disconf-starter'
+                }
+            }
+        }
+    }
+    repositories {
+        maven {
+            name 'release'
+            url 'https://oss.sonatype.org/service/local/staging/deploy/maven2/'
+            credentials {
+                username = sonatypeUsername
+                password = sonatypePassword
+            }
+        }
+        maven {
+            name = 'snapshot'
+            url = 'https://oss.sonatype.org/content/repositories/snapshots/'
+            credentials {
+                username = sonatypeUsername
+                password = sonatypePassword
+            }
+        }
+    }
+}
+
+signing {
+    sign publishing.publications.mavenJava
+} 

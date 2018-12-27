@@ -1,0 +1,32 @@
+plugins {
+    id "org.springframework.boot" version "1.5.18.RELEASE" apply false
+
+}
+subprojects {
+    repositories {
+        maven {
+            url 'http://maven.aliyun.com/nexus/content/groups/public/'
+        }
+        mavenCentral()
+    }
+    apply plugin: 'java'
+    apply plugin: 'io.spring.dependency-management'
+
+//定义GroupID和Version，ArtefactID会自动使用Project名
+    group = 'com.github.daviszhao.spring-boot'
+    version = '0.1.0-SNAPSHOT'
+    // 编译版本和编码配置
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
+    compileJava.options.encoding = 'UTF-8'
+    compileTestJava.options.encoding = 'UTF-8'
+    dependencyManagement {
+        imports {
+            mavenBom 'org.springframework.boot:spring-boot-dependencies:1.5.18.RELEASE'
+        }
+    }
+    dependencies {
+        annotationProcessor 'org.projectlombok:lombok'
+        compileOnly 'org.projectlombok:lombok'
+    }
+}
