@@ -1,0 +1,6 @@
+# Auto Configure
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+com.github.daviszhao.springboot.disconf.client.DisconfClientAutoConfiguration
+# Bootstrap components
+org.springframework.cloud.bootstrap.BootstrapConfiguration=\
+com.github.daviszhao.springboot.disconf.client.DisconfBootstrapConfiguration
